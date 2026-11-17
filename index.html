@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FFF7EB">
+  <meta name="description" content="親職教育善意溝通：從我訊息與4C，練習讚美、感謝、失落支持、增能、道歉與回應負面語言。">
+  <title>把話說進心裡｜親職善意語法</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="content.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#slide">跳至投影片</a>
+  <header class="topbar">
+    <a class="brand" href="#1" aria-label="回到封面"><span class="brand-mark" aria-hidden="true">◌</span> 把話說進心裡</a>
+    <span id="chapter-name" class="chapter-name"></span>
+    <nav aria-label="簡報工具">
+      <button id="chapters-button" aria-haspopup="dialog">章節</button>
+      <button id="notes-button" aria-haspopup="dialog">講師筆記</button>
+      <button id="fullscreen-button" aria-label="切換全螢幕">全螢幕</button>
+    </nav>
+  </header>
+  <main id="stage">
+    <article id="slide" tabindex="-1" aria-labelledby="slide-title"></article>
+  </main>
+  <footer class="controls">
+    <div class="navigation"><button id="previous" aria-label="上一頁">←</button><span id="counter" aria-live="polite"></span><button id="next" aria-label="下一頁">→</button></div>
+    <span class="key-hint">← → 換頁 <span>·</span> 空白鍵揭示</span>
+    <div class="reveal-controls"><button id="hide-answer" hidden>收起答案</button><button id="reveal" class="primary" hidden>揭示參考</button></div>
+    <div class="progress" aria-hidden="true"><div id="progress-fill"></div></div>
+  </footer>
+  <dialog id="chapters-dialog" aria-labelledby="chapters-title"><div class="dialog-header"><h2 id="chapters-title">今天的路線</h2><button class="close-dialog" aria-label="關閉章節">✕</button></div><nav id="chapter-list" aria-label="課程章節"></nav><p class="dialog-tip">所有答案都由講師手動揭示。</p></dialog>
+  <dialog id="notes-dialog" aria-labelledby="notes-title"><div class="dialog-header"><h2 id="notes-title">這一頁的講師筆記</h2><button class="close-dialog" aria-label="關閉筆記">✕</button></div><div id="notes-content"></div><a href="sources.html" target="_blank" rel="noopener">查看全課來源與改寫說明 ↗</a></dialog>
+  <noscript>這份簡報需要啟用 JavaScript 才能換頁及揭示答案。</noscript>
+</body>
+</html>
