@@ -12,17 +12,26 @@ window.COURSE = (() => {
   function add(chapter, title, body, options = {}) {
     slides.push({ chapter, title, body, ...options });
   }
-  function principle(chapter, focus, source) {
-    add(chapter, '先同理，再把話說清楚。', lead(focus) + `<div class="path" style="margin-top:30px"><b>觀察</b><span class="arrow">→</span><b>感受</b><span class="arrow">→</span><b>需要</b><span class="arrow">→</span><b>請求</b></div>` + sub('對對方的感受與需要保持好奇，讓對方核對。'), { kicker: '語法之前 · 同理心 × 4C', source, notes: '簡短回扣底層邏輯即可，不另加內省、書寫活動。說自己的真實感受；猜測對方的感受與需要時，用「是不是」「對嗎」核對。4C 是方向，不要求每次都按順序念完四句。' });
+  function principle(chapter, focus, source, title = '先同理，再把話說清楚。') {
+    add(chapter, title, lead(focus) + `<div class="path" style="margin-top:30px"><b>觀察</b><span class="arrow">→</span><b>感受</b><span class="arrow">→</span><b>需要</b><span class="arrow">→</span><b>請求</b></div>` + sub('對對方的感受與需要保持好奇，讓對方核對。'), { kicker: '語法之前 · 同理心 × 4C', source, notes: '簡短回扣底層邏輯即可，不另加內省、書寫活動。說自己的真實感受；猜測對方的感受與需要時，用「是不是」「對嗎」核對。4C 是方向，不要求每次都按順序念完四句。' });
   }
   function formula(chapter, title, list, source, notes = '') {
     add(chapter, title, rows(list), { kicker: '語法地圖', source, notes: `${notes}語法先於練習情境呈現。讓聽眾知道接下來可以怎麼試說；依現場經驗調整用詞。` });
   }
-  function practice(chapter, title, scenario, prompt, reference, source, notes = '') {
+  function practice(chapter, title, scenario, prompt, reference, source, notes = '', scaffold = null) {
     add(chapter, title, lead(scenario), { kicker: '帶進情境', source, notes });
-    add(chapter, '換你說說看。', question(prompt) + `<p class="placeholder">請直接說出，你會對對方說的話。</p>`, {
-      kicker: '觀眾先試說', className: 'reference-slide', source,
+    const supportLayout = (frame, filled = false) => `<div class="practice-support${filled ? ' is-revealed' : ''}"><section class="practice-scenario"><p class="pair-label">情境提醒</p>${p(scaffold.scenario)}</section><section class="practice-frame"><p class="pair-label">${filled ? '參考回應 · 一種可能的說法' : '試著接下去說'}</p>${rows(frame)}</section></div>`;
+    const support = scaffold
+      ? supportLayout(scaffold.frame)
+      : `<p class="placeholder">請直接說出，你會對對方說的話。</p>`;
+    const filledFrame = scaffold?.fillings ? scaffold.frame.map(([label, text, note], rowIndex) => {
+      let blankIndex = 0;
+      return [label, text.replace(/＿＿/g, () => `<span class="filled-blank">${scaffold.fillings[rowIndex][blankIndex++]}</span>`), note];
+    }) : null;
+    add(chapter, '換你說說看。', question(prompt) + support, {
+      kicker: '觀眾先試說', className: scaffold ? 'reference-slide guided-practice' : 'reference-slide', source,
       reveal: [rows(reference)], revealLabel: '揭示參考回應',
+      ...(filledFrame ? { revealedBody: question(prompt) + supportLayout(filledFrame, true) } : {}),
       notes: `${notes}先邀請聽眾完整試說，再揭示參考。參考只是其中一種說法；依實際情境、感受和對方回應調整，不把它當成唯一標準答案。`
     });
   }
@@ -72,13 +81,32 @@ window.COURSE = (() => {
   add('02 感謝', '謝謝裡，也可能藏著要求。', speech('謝謝你幫忙！以後每天都要這樣喔。') + question('這份感謝，聽起來是什麼感覺？'), { className: 'compact', reveal: [p('謝意後面附上義務，可能讓孩子感到壓力。')], source: '依感謝框架設計的教學對比例句', notes: '這是教學改寫，不是公版原句；感謝不應成為換取未來付出的交易。' });
   principle('02 感謝', '說出自己受到的幫助，<br>也尊重孩子接受謝意的方式。', '公版 p.231；教學整理');
   formula('02 感謝', '感謝：你的行動幫助了我。', [['觀察', '我看到你＿＿，這幫助我＿＿。'], ['感受', '我感到＿＿。'], ['需要', '因為這照顧了我＿＿的需要。'], ['請求', '我想＿＿，表達感謝，你願意嗎？']], '公版 p.231 親子化改寫');
-  practice('02 感謝', '晚餐前，碗筷已經擺好了。', '你下班回家，正忙著煮晚餐。<br>孩子主動把大家的碗筷擺好，<br>讓你煮完飯就能坐下來休息。', '如果是你，會怎麼跟孩子說謝謝？', [
+  practice('02 感謝', '晚餐前，碗筷已經擺好了。', '你下班回家，正忙著煮晚餐。<br>孩子主動把大家的碗筷擺好。', '如果是你，會怎麼跟孩子說謝謝？', [
     ['觀察', '我看到你把大家的碗筷都擺好，讓我煮完飯就能坐下來休息。'], ['感受', '我鬆了一口氣，也很感動，'], ['需要', '因為我今天很需要休息，也感受到我們一起分擔家裡的事。'], ['請求', '謝謝你！我想抱抱你，表達我的感謝，你願意嗎？']
-  ], '依公版 p.231 框架設計的親子情境', '擁抱只是可選的謝意表達，孩子可以拒絕或選擇其他方式；不以感謝要求孩子持續付出。');
+  ], '依公版 p.231 框架設計的親子情境', '情境頁先隱藏「讓你煮完飯就能坐下來休息」的解讀，讓家長自行覺察感受，以及哪些需要因孩子的行動而得到照顧。試說頁保留情境與語法空格，等講師手動揭示才填入參考文字；可收起答案重新練習。先聽家長的發現，再揭示參考回應；休息與分擔只是可能的需要，不是唯一答案。接著用下一頁反思：剛才有沒有想到孩子的行動對自己的影響？擁抱只是可選的謝意表達，孩子可以拒絕或選擇其他方式；不以感謝要求孩子持續付出。', {
+    scenario: '你下班回家，<br>正忙著煮晚餐。<br><br>孩子主動把大家的<br><strong>碗筷擺好。</strong>',
+    frame: [
+      ['觀察', '我看到你＿＿，<br>這幫助我＿＿。'],
+      ['感受', '我感到＿＿。'],
+      ['需要', '因為這照顧了我＿＿的需要。'],
+      ['請求', '我想＿＿，表達感謝，<br>你願意嗎？']
+    ],
+    fillings: [
+      ['把大家的碗筷擺好', '煮完飯就能坐下來休息'],
+      ['放鬆和感動'],
+      ['休息與支持'],
+      ['抱抱你']
+    ]
+  });
+  add('02 感謝', '剛才，你有想到<br>對自己的影響嗎？', steps([
+    '孩子的行動，對我有什麼影響？',
+    '我有什麼感受？',
+    '我發現，自己哪些需要被滿足了？'
+  ]) + sub('發現自己的感受與需要，也是在練習自我覺察。'), { kicker: '反思 · 看見自己', source: '講師教學設計：接續公版 p.231 感謝練習', notes: '回看剛才自己的回答，而不是背誦上一頁的參考句。先問家長是否想到孩子行動對自己的影響，再邀請分享感受與被滿足的需要。第30頁刻意不說「讓你煮完飯就能坐下來休息」，就是留出自行發現的空間。不同家長可能看見不同影響與需要；休息並非唯一答案，也不以有沒有想到休息評分。沒有立刻想到，也可以從現在開始覺察。依現場回應逐題引導，不要求書寫或分享私人衝突。' });
 
   add('03 失落支持與期許', '孩子失敗了，<br>我可以怎麼回應？', lead('很想讓他進步，<br>卻可能先讓他更難受。'), { kicker: '03 · 先接住，再一起往前', source: '公版 p.232–234' });
   add('03 失落支持與期許', '「你考不及格，好差勁！」', speech('你考不及格，我很失望。<br>你考不及格，沒有大餐了。') + question('如果剛考差的你聽到，會有什麼感受？'), { className: 'compact', reveal: [p('「好差勁」在評價人；「沒有大餐」加上獎懲壓力。<br>只說自己的失望，也可能還沒聽見孩子的經驗。')], source: '公版 p.233（節錄）', notes: '「我很失望」本身可以是真實感受，不一概判為 4D。此處比較的是整段回應是否有理解孩子；不得把所有不愉快感受都視為錯誤表達。' });
-  principle('03 失落支持與期許', '先理解失落與在乎的事，<br>再一起討論能做的改善。', '公版 p.233–234');
+  principle('03 失落支持與期許', '先理解失落與在乎的事，<br>再一起討論能做的改善。', '公版 p.233–234', '先自我覺察，再同理，<br>最後把話說清楚。');
   formula('03 失落支持與期許', '失落支持：一起看見下一步。', [['觀察', '我看到＿＿，發生了＿＿。'], ['感受', '你是不是有些＿＿？我也感到＿＿。'], ['需要', '你很在意＿＿，對嗎？我也重視＿＿。'], ['請求', '你願意一起討論，怎麼補救或改善嗎？']], '公版 p.234 語句整理', '對孩子的感受與需要用試探語氣核對，不直接宣布「我知道你很難過」。');
   practice('03 失落支持與期許', '這次，成績沒有及格。', '孩子持續準備考試，<br>這次成績卻沒有及格。<br>他把考卷帶回來，神情低落。', '你會怎麼回應他的失落，也表達你的期許？', [
     ['觀察', '我看到這次成績沒有及格，也看到你這段時間持續準備。'], ['感受', '你是不是很失落？我也有些難過，'], ['需要', '因為我在意你的學習，也希望你得到支持。你很希望進步，對嗎？'], ['請求', '等你願意時，我們一起看看卡在哪裡，再討論可以怎麼做，好嗎？']
