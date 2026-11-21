@@ -10,8 +10,9 @@
     const s = slides[current];
     const count = revealed.get(current) || 0;
     const answers = s.reveal || [];
+    const body = count > 0 && s.revealedBody ? s.revealedBody : s.body;
     $('slide').className = s.className || '';
-    $('slide').innerHTML = `<p class="eyebrow">${s.kicker || s.chapter}</p>${s.cover ? '' : `<h1 id="slide-title">${s.title}</h1>`}${s.body}${answers.map((html, i) => `<section class="answer" aria-label="參考回應" ${i >= count ? 'hidden' : ''}><p class="reference-label">參考方向 · 回到自己的真實經驗</p>${html}</section>`).join('')}${s.source ? '<span class="source-cue">來源與改寫說明，見講師筆記</span>' : ''}`;
+    $('slide').innerHTML = `<p class="eyebrow">${s.kicker || s.chapter}</p>${s.cover ? '' : `<h1 id="slide-title">${s.title}</h1>`}${body}${s.revealedBody ? '' : answers.map((html, i) => `<section class="answer" aria-label="參考回應" ${i >= count ? 'hidden' : ''}><p class="reference-label">參考方向 · 回到自己的真實經驗</p>${html}</section>`).join('')}${s.source ? '<span class="source-cue">來源與改寫說明，見講師筆記</span>' : ''}`;
     $('chapter-name').textContent = s.chapter;
     $('counter').textContent = `${String(current + 1).padStart(2, '0')} / ${slides.length}`;
     $('previous').disabled = current === 0;
